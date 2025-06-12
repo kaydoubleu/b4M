@@ -1,0 +1,99 @@
+
+# Do Logistic Regression (LogReg) on a given breast-cancer dataset
+# ..Wisconsin Breast Cancer dataset: 
+# ....dataset origin: https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic
+# ....SciKit usage info: https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html#sklearn.datasets.load_breast_cancer 
+# ....SciKit source: https://github.com/scikit-learn/scikit-learn/blob/98ed9dc73/sklearn/datasets/_base.py#L749
+# ..inspired by Marcel Keller's ML intro:
+# ..https://mp-spdz.readthedocs.io/en/latest/machine-learning.html 
+
+start_timer(1)
+
+training_nr_epoch = int(program.args[1]) 
+training_nr_batches = 2
+
+# sbitint.linear_rounds = True
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+
+# mpSPDZ compilation warning:
+# ..WARNING: Probabilistic truncation leaks some information, 
+# ..see https://eprint.iacr.org/2024/1127 for discussion. 
+# ..Use 'sfix.round_nearest = True' to deactivate this for fixed-point operations.
+sfix.round_nearest = True
+
+# to avoid: WARNING: Order of memory instructions not preserved, errors possible
+program.protect_memory(True)
+
+# ##############################################################################
+# Input:
+# ..load dataset for training & test
+# ....note: option to get the data input from, e.g., Party 0 & 1:
+# ....("data is stored in Player-Data/Input-Binary-P0-0, which is where binary-encoded inputs for player 0 are read from")
+# ....split horizontally:
+#     a = sfix.input_tensor_via(0, X_train[len(X_train) // 2:])
+#     b = sfix.input_tensor_via(1, X_train[:len(X_train) // 2])
+#     X_train = a.concat(b)
+#     a = sint.input_tensor_via(0, y_train[len(y_train) // 2:])
+#     b = sint.input_tensor_via(1, y_train[:len(y_train) // 2])
+#     y_train = a.concat(b)
+# ....split vertically:
+#     a = sfix.input_tensor_via(0, X_train[:,:X_train.shape[1] // 2])
+#     b = sfix.input_tensor_via(1, X_train[:,X_train.shape[1] // 2:])
+#     X_train = a.concat_columns(b)
+#     ...same for y_train?
+start_timer(2)
+
+print_ln("Loading dataset..")
+X, y = load_breast_cancer(return_X_y=True)
+
+## normalize column-wise
+X /= X.max(axis=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+X_train = sfix.input_tensor_via(0, X_train)
+y_train = sint.input_tensor_via(0, y_train)
+
+X_test = sfix.input_tensor_via(0, X_test)
+y_test = sint.input_tensor_via(0, y_test)
+
+stop_timer(2)
+# ##############################################################################
+
+# ##############################################################################
+# Computation:
+# (a) Training
+start_timer(3)
+
+# program as optional ML-object parameter:
+# ...see, e.g.: https://mp-spdz.readthedocs.io/en/latest/Compiler.html#Compiler.ml.SGDLogistic
+# log = ml.SGDLogistic(training_nr_epoch, trainin_nr_batches, program)
+
+from Compiler import ml
+
+print_ln("..initialize ML model..")
+log = ml.SGDLogistic(training_nr_epoch, training_nr_batches, program)
+print_ln("..train ML model (.fit)..")
+log.fit(X_train, y_train)
+
+stop_timer(3)
+
+# (b) Evaluating
+start_timer(4)
+
+print_ln("..evaluate ML model on test data (.predict)..")
+prediction_res = log.predict(X_test) - y_test.get_vector()
+print_ln("..evaluate prediciton probability of ML model on test data (.predict_proba)..")
+prediction_prob = log.predict_proba(X_test) - y_test.get_vector()
+
+print_ln("Prediction Correctness (0 for correct, ±1 for incorrect) :: <b3m4>{\"result\":%s}</b3m4>", prediction_res.reveal())
+print_ln("Measure of 'how much the probability estimate deviates' :: %s", prediction_prob.reveal())
+
+stop_timer(4)
+
+# ##############################################################################
+
+stop_timer(1)
+
+# print_ln('<b3m4>{"result":%s}</b3m4>', res[0].reveal())

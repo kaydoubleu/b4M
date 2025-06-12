@@ -1,0 +1,38 @@
+
+# Get maximum value in Array 
+# ...inspired from Marcel-Keller's benchmark code:
+# ...https://github.com/mkskeller/mpc-benchmarks/blob/master/mp-spdz/dot.mpc
+
+start_timer(1)
+
+n = int(program.args[1])
+sbitint.linear_rounds = True
+
+# ##############################################################################
+# Input:
+start_timer(2)
+a = sint.Array(n)
+a.input_from(0)
+
+# b = sint.Array(n)
+# b.input_from(1)
+stop_timer(2)
+# ##############################################################################
+
+# ##############################################################################
+# Computation:
+start_timer(3)
+program.protect_memory(True)
+res = sint.Array(1)
+res[0] = a[0]
+
+@for_range(n)
+def _(i):
+  res[0] = res[0].max(a[i])
+stop_timer(3)
+# ##############################################################################
+
+stop_timer(1)
+
+print_ln('<b3m4>{"result":%s}</b3m4>', res[0].reveal())
+# print_ln('\nDEBUG: Array: \n%s', a.reveal())

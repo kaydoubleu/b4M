@@ -1,0 +1,49 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+## Helper Packages
+lxml="*" # parsing HTML/XML-related stuff
+regex="*" # parsing via Regular Expressions
+docker="*" # PyDock
+ipython="*" # Python terminal
+setuptools="*" # e.g., distutils
+tqdm = "*" # e.g., progress bar in terminal output
+#toml = "*"
+
+## ML
+#scikit-learn = "*" # at least in respective Docker containers needed
+
+## Graphs
+seaborn = "*"
+matplotlib = "*"
+pandas = "*"
+numpy = "*"
+
+## GUI
+#PySimpleGUI = "*"
+# Static Analysis
+#flake8 = "*"
+#pylint = "*"
+
+## Documentation
+#Sphinx = "*"
+#sphinx-autoapi = "*"
+#sphinxcontrib-napoleon = "*"
+
+## Deploy
+#pyinstaller = "*"
+#traitlets = "*"
+#termcolor = "*"
+
+## Miscellaneous
+#hmac = "*" # e.g., for `urllib3` which is used by other packages
+
+[dev-packages]
+
+[requires]
+python_version = "3"
+
+
