@@ -11,7 +11,7 @@ To the best of our knowledge, for the first time the whole benchmarking pipeline
 
 To showcase b4M, we provide an exemplary evaluation for the computation of the dot product and logistic regression using a real-world dataset. With this work, we move towards fully-automated evaluations of MPC programs, protocols, and engines, which smoothens the setup process and viewing various trade-offs. Hence, b4M advances MPC development by improving the benchmarking usability aspect of it.
 
-**@ePrint:**
+** @ePrint:**
 ```
 @misc{cryptoeprint:2025/1106,
       author = {Karl W. Koch and Dragos Rotaru and Christian Rechberger},
