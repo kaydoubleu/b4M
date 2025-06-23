@@ -1,9 +1,9 @@
-# b4M - Holistic Benchmarking for MPC
+# 🌅📊🙌 b4M - Holistic Benchmarking for MPC
 
 This is the initial repository of b4M with the relevant code for the respective paper;
 please stay tuned and monitor this repository for updates in the upcoming weeks (benchmarking summer of 2025 🌅😊)
 
-## the Paper
+## 📜 the Paper
 
 Secure Multi-Party Computation (MPC) is becoming more and more usable in practice. The practicality origins primarily from well-established general-purpose MPC frameworks, such as MP-SPDZ. However, to evaluate the practicality of an MPC program in the envisioned environments, still many benchmarks need to be done. We identified three challenges in the context of performance evaluations within the MPC domain: first, the cumbersome process to holistically benchmark MPC programs; second, the difficulty to find the best-possible MPC setting for a given task and envisioned environment; and third, to have consistent evaluations of the same task or problem area across projects and papers. In this work, we address the gap of tedious and complex benchmarking of MPC. Related works so far mostly provide a comparison for certain programs with different engines.
 
